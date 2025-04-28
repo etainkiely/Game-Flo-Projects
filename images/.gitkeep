@@ -1,0 +1,6 @@
+# This file ensures the images directory is created when cloning the repository
+# You should place your images in this directory:
+# - Etain Kiely.png (profile photo)
+# - logo.jpg (ATU logo)
+# - Any other images needed for the site
+

@@ -1,0 +1,476 @@
+:root {
+    /* ATU Brand Colors */
+    --atu-green: #006838;
+    --atu-lime: #78BE20;
+    --atu-emerald: #00A651;
+    --atu-light-green: #D4E14E;
+    --atu-teal: #00A79D;
+    --atu-blue: #0073CF;
+    --atu-navy: #004B87;
+    
+    /* Golden Ratio */
+    --golden-ratio: 1.618;
+    --base-spacing: 10px;
+    --phi-1: calc(var(--base-spacing) * var(--golden-ratio));
+    --phi-2: calc(var(--phi-1) * var(--golden-ratio));
+    --phi-3: calc(var(--phi-2) * var(--golden-ratio));
+    --phi-4: calc(var(--phi-3) * var(--golden-ratio));
+}
+
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    background: #f8f9fa;
+    line-height: var(--golden-ratio);
+}
+
+/* Navigation bar with ATU green */
+.nav-bar {
+    background-color: var(--atu-green);
+    color: white;
+    padding: var(--phi-1) var(--phi-2);
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+}
+
+/* Dropdown Navigation Menu */
+.nav-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.nav-logo {
+    font-weight: bold;
+    font-size: var(--phi-2);
+    display: flex;
+    align-items: center;
+}
+
+.nav-menu {
+    display: flex;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+
+.nav-item {
+    position: relative;
+    margin-left: var(--phi-1);
+}
+
+.nav-link {
+    color: white;
+    text-decoration: none;
+    padding: var(--base-spacing);
+    display: block;
+    transition: all 0.3s ease;
+}
+
+.nav-link:hover {
+    color: var(--atu-light-green);
+}
+
+.dropdown {
+    position: relative;
+}
+
+.dropdown-content {
+    display: none;
+    position: absolute;
+    background-color: white;
+    min-width: 200px;
+    box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+    z-index: 10;
+    border-radius: 4px;
+    overflow: hidden;
+}
+
+.dropdown-content a {
+    color: var(--atu-green);
+    padding: var(--base-spacing) var(--phi-1);
+    text-decoration: none;
+    display: block;
+    transition: all 0.2s ease;
+}
+
+.dropdown-content a:hover {
+    background-color: rgba(0, 104, 56, 0.1);
+}
+
+.dropdown:hover .dropdown-content {
+    display: block;
+}
+
+.dropdown .nav-link::after {
+    content: " ▼";
+    font-size: 0.7em;
+    vertical-align: middle;
+}
+
+/* Mobile Menu */
+.mobile-menu-button {
+    display: none;
+    cursor: pointer;
+}
+
+#mobile-menu {
+    display: none;
+    padding-bottom: 15px;
+}
+
+/* Animations */
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(-10px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes growSpiral {
+    0% { transform: scaleX(0); }
+    100% { transform: scaleX(1); }
+}
+
+/* Active navigation indicator */
+.active-nav-item .nav-link {
+    position: relative;
+    border-bottom: 3px solid var(--atu-light-green);
+}
+
+.active-nav-item .nav-link::after {
+    content: "";
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 3px;
+    background: linear-gradient(to right, var(--atu-green), var(--atu-lime));
+    transform-origin: left center;
+    animation: growSpiral 0.3s ease-out forwards;
+}
+
+/* Professional Header Section */
+.professional-header {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 25px 20px;
+    background: linear-gradient(45deg, #4B2D73, #3C73B8);
+    border-radius: 8px;
+    margin-top: var(--phi-2);
+    position: relative;
+    overflow: hidden;
+}
+
+.professional-header::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="233" height="144" opacity="0.2"><path d="M0,144 A144,144 0 0,1 144,0 L144,144 Z" fill="%23006838"/><path d="M144,0 A89,89 0 0,1 233,89 L144,89 Z" fill="%2378BE20"/><path d="M144,89 A55,55 0 0,1 199,144 L144,144 Z" fill="%2300A651"/><path d="M144,144 A34,34 0 0,1 110,110 L144,110 Z" fill="%23D4E14E"/><path d="M144,110 A21,21 0 0,1 165,89 L144,89 Z" fill="%23006838"/></svg>');
+    background-repeat: no-repeat;
+    background-position: right bottom;
+    opacity: 0.15;
+    z-index: 0;
+}
+
+/* Expertise Tags */
+.expertise-tags {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 15px;
+    margin: 15px 0;
+}
+
+.expertise-tag {
+    padding: 6px 14px;
+    border-radius: 20px;
+    font-size: 14px;
+    color: white;
+}
+
+/* Quick Stats */
+.quick-stats {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 25px;
+    margin-top: 20px;
+}
+
+.stat-item {
+    text-align: center;
+    color: white;
+}
+
+.stat-number {
+    font-size: 36px;
+    font-weight: bold;
+}
+
+.stat-label {
+    font-size: 14px;
+}
+
+/* Professional Introduction */
+.professional-intro {
+    max-width: 800px;
+    margin: 30px auto;
+    padding: 25px;
+    background: white;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.08);
+    border-radius: 6px;
+    border-left: 4px solid var(--atu-navy);
+}
+
+/* Impact Metrics */
+.impact-section {
+    max-width: 1200px;
+    margin: 40px auto;
+    padding: 0 20px;
+}
+
+.section-title {
+    text-align: center;
+    margin-bottom: 30px;
+}
+
+.section-title h2 {
+    font-size: 32px;
+    color: var(--atu-navy);
+    margin: 0 0 10px 0;
+}
+
+.section-divider {
+    width: 60px;
+    height: 3px;
+    background: var(--atu-blue);
+    margin: 0 auto;
+}
+
+.metrics-grid {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 20px;
+    margin-top: 25px;
+}
+
+.metric-card {
+    flex: 1;
+    min-width: 300px;
+    max-width: 380px;
+    background: white;
+    border-radius: 8px;
+    box-shadow: 0 4px 16px rgba(0,0,0,0.08);
+    overflow: hidden;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.metric-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 25px rgba(0,0,0,0.15);
+}
+
+.card-header {
+    padding: 16px;
+    text-align: center;
+}
+
+.card-content {
+    padding: 25px;
+}
+
+.metric-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    font-size: 16px;
+    color: #34495e;
+}
+
+.metric-item {
+    display: flex;
+    align-items: center;
+    margin-bottom: 18px;
+}
+
+.metric-icon {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-right: 15px;
+    font-weight: bold;
+}
+
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: var(--phi-2);
+}
+
+.header {
+    text-align: center;
+    margin: var(--phi-3) 0;
+    position: relative;
+}
+
+/* Fern Pattern Background */
+.header::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="100" height="100" viewBox="0 0 100 100" opacity="0.1"><path d="M50,0 C60,20 30,40 50,60 C40,40 70,20 50,0" fill="%2378BE20"/><path d="M50,10 C55,20 40,30 50,40 C45,30 60,20 50,10" fill="%2300A651"/><path d="M60,20 C65,30 50,40 60,50 C55,40 70,30 60,20" fill="%23D4E14E"/><path d="M40,20 C45,30 30,40 40,50 C35,40 50,30 40,20" fill="%23006838"/></svg>');
+    background-repeat: repeat;
+    z-index: -1;
+    opacity: 0.15;
+}
+
+.header img {
+    max-width: 100%;
+    height: auto;
+    border-radius: 8px;
+    margin-top: 20px;
+}
+
+/* Mathematical Nature Patterns */
+.math-nature-section {
+    position: relative;
+    padding: var(--phi-2);
+    background-color: white;
+    border-radius: 8px;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    margin-top: var(--phi-3);
+    overflow: hidden;
+}
+
+/* Golden Ratio Grid Layout */
+.golden-grid {
+    display: grid;
+    grid-template-columns: 1fr calc(1fr * var(--golden-ratio));
+    gap: var(--phi-1);
+    margin-top: var(--phi-2);
+}
+
+/* Fibonacci Pattern */
+.fibonacci-background {
+    position: relative;
+    padding: var(--phi-2);
+    background-color: white;
+    border-radius: 8px;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    margin-top: var(--phi-3);
+    overflow: hidden;
+}
+
+.fibonacci-background::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="233" height="144" opacity="0.3"><path d="M0,144 A144,144 0 0,1 144,0 L144,144 Z" fill="%23006838"/><path d="M144,0 A89,89 0 0,1 233,89 L144,89 Z" fill="%2378BE20"/><path d="M144,89 A55,55 0 0,1 199,144 L144,144 Z" fill="%2300A651"/><path d="M144,144 A34,34 0 0,1 110,110 L144,110 Z" fill="%23D4E14E"/><path d="M144,110 A21,21 0 0,1 165,89 L144,89 Z" fill="%23006838"/></svg>');
+    background-repeat: no-repeat;
+    background-position: right bottom;
+    opacity: 0.2;
+    z-index: 0;
+    pointer-events: none;
+}
+
+/* Fern Pattern Section */
+.fern-background {
+    position: relative;
+    padding: var(--phi-2);
+    background-color: white;
+    border-radius: 8px;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    margin-top: var(--phi-2);
+    overflow: hidden;
+}
+
+.fern-background::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="200" height="200" viewBox="0 0 200 200" opacity="0.25"><path d="M100,0 C120,40 60,80 100,120 C80,80 140,40 100,0" fill="%23006838" stroke="%23006838" stroke-width="1.5"/><path d="M100,20 C110,40 80,60 100,80 C90,60 120,40 100,20" fill="%2378BE20" stroke="%2378BE20" stroke-width="1.5"/><path d="M120,40 C130,60 100,80 120,100 C110,80 140,60 120,40" fill="%2300A651" stroke="%2300A651" stroke-width="1.5"/><path d="M80,40 C90,60 60,80 80,100 C70,80 100,60 80,40" fill="%23D4E14E" stroke="%23D4E14E" stroke-width="1.5"/></svg>');
+    background-repeat: no-repeat;
+    background-position: left center;
+    opacity: 0.2;
+    z-index: 0;
+    pointer-events: none;
+}
+
+/* Golden Spiral */
+.golden-spiral {
+    width: 100%;
+    height: 200px;
+    position: relative;
+    margin-top: var(--phi-2);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 500" opacity="0.3"><path d="M400,250 A250,250 0 0,1 650,500 L400,500 Z" fill="%23006838"/><path d="M400,500 A155,155 0 0,1 245,345 L400,345 Z" fill="%2378BE20"/><path d="M400,345 A95,95 0 0,1 495,250 L400,250 Z" fill="%2300A651"/><path d="M400,250 A60,60 0 0,1 340,190 L400,190 Z" fill="%23D4E14E"/><path d="M400,190 A35,35 0 0,1 435,155 L400,155 Z" fill="%2300A79D"/><path d="M400,155 A25,25 0 0,1 375,130 L400,130 Z" fill="%230073CF"/></svg>');
+    background-repeat: no-repeat;
+    background-position: center;
+}
+
+/* Content sections */
+.content {
+    position: relative;
+    z-index: 1;
+    padding: var(--phi-2);
+}
+
+/* Media query for responsive design */
+@media (max-width: 768px) {
+    .container {
+        padding: 10px;
+    }
+    
+    .nav-menu {
+        display: none;
+    }
+    
+    .mobile-menu-button {
+        display: block;
+    }
+    
+    .nav-container {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+    
+    .golden-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    .metrics-grid {
+        flex-direction: column;
+        align-items: center;
+    }
+    
+    .metric-card {
+        width: 100%;
+    }
+    
+    .fibonacci-background .content {
+        flex-direction: column;
+    }
+    
+    .fibonacci-background .content > div {
+        margin-top: var(--phi-2);
+    }
+}
