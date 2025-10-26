@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SpellCraft - Learn Spellings Fun!</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="css/spellcraft.css">
+</head>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <header class="app-header">
+            <div class="header-content">
+                <h1><i class="fas fa-wand-magic-sparkles"></i> SpellCraft</h1>
+                <p class="tagline">Master spellings with magic! ✨</p>
+            </div>
+            <button class="home-button" onclick="window.location.href='../index.html'">
+                <i class="fas fa-home"></i> Home
+            </button>
+        </header>
+
+        <!-- Language Selection Screen -->
+        <div id="language-screen" class="screen active">
+            <h2>Choose Your Language</h2>
+            <div class="language-buttons">
+                <button class="language-btn" onclick="selectLanguage('english')">
+                    <i class="fas fa-flag"></i>
+                    <span>English</span>
+                </button>
+                <button class="language-btn" onclick="selectLanguage('irish')">
+                    <i class="fas fa-flag"></i>
+                    <span>Gaeilge (Irish)</span>
+                </button>
+            </div>
+        </div>
+
+        <!-- Level Selection Screen -->
+        <div id="level-screen" class="screen">
+            <div class="screen-header">
+                <button class="back-button" onclick="showScreen('language-screen')">
+                    <i class="fas fa-arrow-left"></i> Back
+                </button>
+                <h2>Choose Your Level</h2>
+            </div>
+            <div id="level-buttons" class="level-grid">
+                <!-- Levels will be dynamically generated -->
+            </div>
+        </div>
+
+        <!-- Game Screen -->
+        <div id="game-screen" class="screen">
+            <div class="game-header">
+                <button class="back-button" onclick="exitGame()">
+                    <i class="fas fa-arrow-left"></i> Exit
+                </button>
+                <div class="progress-info">
+                    <div class="score-display">
+                        <span class="label">Score:</span>
+                        <span id="current-score">0</span>/<span id="total-words">0</span>
+                    </div>
+                    <div class="level-display">
+                        <span id="current-level-name">Level 1</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Word Display Area -->
+            <div class="word-display-area">
+                <div class="audio-controls">
+                    <button class="audio-btn" id="play-word-btn" onclick="playWord()">
+                        <i class="fas fa-volume-up"></i> Play Word
+                    </button>
+                </div>
+                <div class="word-hint" id="word-hint">
+                    Listen to the word
+                </div>
+            </div>
+
+            <!-- Input Area -->
+            <div class="input-area">
+                <input 
+                    type="text" 
+                    id="spelling-input" 
+                    class="spelling-input" 
+                    placeholder="Type the spelling here..."
+                    autocomplete="off"
+                    spellcheck="false"
+                >
+                <button class="submit-btn" onclick="checkSpelling()">
+                    <i class="fas fa-check"></i> Check
+                </button>
+            </div>
+
+            <!-- Feedback Area -->
+            <div id="feedback-area" class="feedback-area">
+                <!-- Feedback will appear here -->
+            </div>
+
+            <!-- Recording Controls -->
+            <div class="recording-section">
+                <h3>Practice Recording</h3>
+                <p class="recording-hint">Record yourself spelling the words aloud!</p>
+                <div class="recording-controls">
+                    <button class="record-btn" id="record-btn" onclick="toggleRecording()">
+                        <i class="fas fa-microphone"></i> Start Recording
+                    </button>
+                    <button class="play-recording-btn" id="play-recording-btn" onclick="playRecording()" disabled>
+                        <i class="fas fa-play"></i> Play Recording
+                    </button>
+                </div>
+                <div id="recording-status" class="recording-status"></div>
+            </div>
+
+            <!-- Progress Bar -->
+            <div class="progress-bar-container">
+                <div class="progress-bar" id="progress-bar"></div>
+            </div>
+        </div>
+
+        <!-- Results Screen -->
+        <div id="results-screen" class="screen">
+            <div class="results-content">
+                <h2>Level Complete! 🎉</h2>
+                <div class="results-stats">
+                    <div class="stat">
+                        <div class="stat-value" id="final-score">0</div>
+                        <div class="stat-label">Words Correct</div>
+                    </div>
+                    <div class="stat">
+                        <div class="stat-value" id="accuracy">0%</div>
+                        <div class="stat-label">Accuracy</div>
+                    </div>
+                </div>
+                
+                <!-- Rewards -->
+                <div class="rewards-section">
+                    <h3>Your Rewards!</h3>
+                    <div id="rewards-display" class="rewards-display">
+                        <!-- Rewards will be displayed here -->
+                    </div>
+                    <div id="device-time-reward" class="device-time-reward">
+                        <!-- Device time reward will be shown here -->
+                    </div>
+                </div>
+
+                <!-- Action Buttons -->
+                <div class="results-actions">
+                    <button class="action-btn primary" onclick="nextLevel()">
+                        <i class="fas fa-forward"></i> Next Level
+                    </button>
+                    <button class="action-btn secondary" onclick="retryLevel()">
+                        <i class="fas fa-redo"></i> Retry Level
+                    </button>
+                    <button class="action-btn secondary" onclick="showScreen('level-screen')">
+                        <i class="fas fa-list"></i> All Levels
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Parent Dashboard -->
+        <button class="parent-dashboard-btn" onclick="toggleParentDashboard()">
+            <i class="fas fa-chart-line"></i> Parent Dashboard
+        </button>
+
+        <div id="parent-dashboard" class="parent-dashboard">
+            <div class="dashboard-content">
+                <div class="dashboard-header">
+                    <h2>Parent Dashboard</h2>
+                    <button class="close-btn" onclick="toggleParentDashboard()">
+                        <i class="fas fa-times"></i>
+                    </button>
+                </div>
+                <div class="dashboard-stats">
+                    <div class="stat-card">
+                        <h3>Total Progress</h3>
+                        <div id="total-progress" class="dashboard-stat">0%</div>
+                    </div>
+                    <div class="stat-card">
+                        <h3>Levels Completed</h3>
+                        <div id="levels-completed" class="dashboard-stat">0/0</div>
+                    </div>
+                    <div class="stat-card">
+                        <h3>Total Device Time Earned</h3>
+                        <div id="total-device-time" class="dashboard-stat">0 mins</div>
+                    </div>
+                    <div class="stat-card">
+                        <h3>Recent Activity</h3>
+                        <div id="recent-activity" class="activity-list">
+                            No activity yet
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="js/spellcraft.js"></script>
+</body>
+</html>
