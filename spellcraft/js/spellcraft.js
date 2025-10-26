@@ -7,6 +7,7 @@ let score = 0;
 let words = [];
 let completedLevels = new Set();
 let audioRecorder = null;
+let audioStream = null;
 let audioChunks = [];
 let recordedAudioUrl = null;
 let deviceTimeEarned = 0;
@@ -66,7 +67,7 @@ const wordLists = {
             { word: 'cara', hint: 'Friend in English' }
         ],
         3: [
-            { word: 'peileacán', hint: 'Butterfly in English' },
+            { word: 'féileacán', hint: 'Butterfly in English' },
             { word: 'teilifís', hint: 'Television in English' },
             { word: 'leabharlann', hint: 'Library in English' },
             { word: 'aimsir', hint: 'Weather in English' },
@@ -386,8 +387,8 @@ async function toggleRecording() {
     if (!audioRecorder) {
         // Start recording
         try {
-            const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
-            audioRecorder = new MediaRecorder(stream);
+            audioStream = await navigator.mediaDevices.getUserMedia({ audio: true });
+            audioRecorder = new MediaRecorder(audioStream);
             audioChunks = [];
             
             audioRecorder.ondataavailable = (event) => {
@@ -412,7 +413,10 @@ async function toggleRecording() {
     } else {
         // Stop recording
         audioRecorder.stop();
-        audioRecorder.stream.getTracks().forEach(track => track.stop());
+        if (audioStream) {
+            audioStream.getTracks().forEach(track => track.stop());
+            audioStream = null;
+        }
         audioRecorder = null;
         recordBtn.innerHTML = '<i class="fas fa-microphone"></i> Start Recording';
         recordBtn.classList.remove('recording');
