@@ -73,6 +73,15 @@ document.addEventListener('DOMContentLoaded', function() {
  */
 let uploadedFiles = [];
 
+/**
+ * Escape HTML to prevent XSS attacks
+ */
+function escapeHtml(text) {
+    const div = document.createElement('div');
+    div.textContent = text;
+    return div.innerHTML;
+}
+
 function initFileUpload() {
     const uploadArea = document.getElementById('uploadArea');
     const fileInput = document.getElementById('fileInput');
@@ -138,6 +147,7 @@ function createPreview(file) {
     previewItem.className = 'preview-item';
     
     const fileIndex = uploadedFiles.length - 1;
+    const escapedFileName = escapeHtml(file.name);
     
     // Check if file is an image
     if (file.type.startsWith('image/')) {
@@ -147,9 +157,9 @@ function createPreview(file) {
                 <button class="remove-file-btn" onclick="removeFile(${fileIndex})">
                     <i class="fas fa-times"></i>
                 </button>
-                <img src="${e.target.result}" class="preview-image" alt="${file.name}">
+                <img src="${e.target.result}" class="preview-image" alt="${escapedFileName}">
                 <div class="preview-file-info">
-                    <div class="preview-file-name">${file.name}</div>
+                    <div class="preview-file-name">${escapedFileName}</div>
                     <div class="preview-file-size">${formatFileSize(file.size)}</div>
                 </div>
             `;
@@ -166,7 +176,7 @@ function createPreview(file) {
                 <div class="preview-file-icon">
                     <i class="fas ${iconClass}"></i>
                 </div>
-                <div class="preview-file-name">${file.name}</div>
+                <div class="preview-file-name">${escapedFileName}</div>
                 <div class="preview-file-size">${formatFileSize(file.size)}</div>
             </div>
         `;
@@ -218,6 +228,7 @@ function renderPreviews() {
     uploadedFiles.forEach((file, index) => {
         const previewItem = document.createElement('div');
         previewItem.className = 'preview-item';
+        const escapedFileName = escapeHtml(file.name);
         
         if (file.type.startsWith('image/')) {
             const reader = new FileReader();
@@ -226,9 +237,9 @@ function renderPreviews() {
                     <button class="remove-file-btn" onclick="removeFile(${index})">
                         <i class="fas fa-times"></i>
                     </button>
-                    <img src="${e.target.result}" class="preview-image" alt="${file.name}">
+                    <img src="${e.target.result}" class="preview-image" alt="${escapedFileName}">
                     <div class="preview-file-info">
-                        <div class="preview-file-name">${file.name}</div>
+                        <div class="preview-file-name">${escapedFileName}</div>
                         <div class="preview-file-size">${formatFileSize(file.size)}</div>
                     </div>
                 `;
@@ -244,7 +255,7 @@ function renderPreviews() {
                     <div class="preview-file-icon">
                         <i class="fas ${iconClass}"></i>
                     </div>
-                    <div class="preview-file-name">${file.name}</div>
+                    <div class="preview-file-name">${escapedFileName}</div>
                     <div class="preview-file-size">${formatFileSize(file.size)}</div>
                 </div>
             `;
