@@ -150,6 +150,32 @@
             </p>
         </div>
         
+        <!-- File Upload Section -->
+        <div class="file-upload-section">
+            <h2><i class="fas fa-cloud-upload-alt"></i> Upload Files & Images</h2>
+            <p>Share files or images to visualize your ideas</p>
+            
+            <div class="upload-container" id="uploadContainer">
+                <div class="upload-area" id="uploadArea">
+                    <i class="fas fa-cloud-upload-alt upload-icon"></i>
+                    <p class="upload-text">Drag & drop files here or click to browse</p>
+                    <p class="upload-subtext">Supports images (PNG, JPG, GIF) and documents (PDF, DOC, TXT)</p>
+                    <input type="file" id="fileInput" multiple accept="image/*,.pdf,.doc,.docx,.txt" hidden>
+                    <button class="upload-btn" onclick="document.getElementById('fileInput').click()">
+                        <i class="fas fa-folder-open"></i> Choose Files
+                    </button>
+                </div>
+                
+                <div class="preview-area" id="previewArea" style="display: none;">
+                    <h3>Uploaded Files</h3>
+                    <div id="previewContainer"></div>
+                    <button class="clear-btn" onclick="clearUploads()">
+                        <i class="fas fa-trash"></i> Clear All
+                    </button>
+                </div>
+            </div>
+        </div>
+        
         <div class="header">
             <h1>Atlantic Technological University</h1>
             <p>Nature & Mathematics in Design</p>
