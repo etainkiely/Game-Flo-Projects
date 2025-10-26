@@ -9,6 +9,7 @@ This repository contains the source code for Dr. Etain Kiely's personal academic
 - Nature-inspired mathematical patterns throughout the design
 - Golden ratio-based layout and spacing
 - ATU brand colors and visual identity
+- File and image upload functionality with drag-and-drop support
 
 ## Mathematical Elements
 
@@ -23,9 +24,23 @@ The website incorporates various mathematical patterns found in nature:
 
 - HTML5
 - CSS3 (with custom variables for consistent theming)
-- JavaScript (for mobile menu and interactive elements)
+- JavaScript (for mobile menu, file upload, and interactive elements)
 - SVG (for mathematical patterns and visualizations)
 - GitHub Pages (for hosting)
+
+## Interactive Features
+
+### File Upload
+
+The website includes a file and image upload feature that allows users to:
+
+- **Upload files** by clicking the "Choose Files" button or dragging and dropping files onto the upload area
+- **Preview images** with automatic thumbnail generation
+- **View file details** including filename and size
+- **Remove files** individually or clear all uploaded files at once
+- **Supported formats**: Images (PNG, JPG, GIF) and documents (PDF, DOC, DOCX, TXT)
+
+Note: File uploads are client-side only and are not persisted to a server.
 
 ## Directory Structure
 
