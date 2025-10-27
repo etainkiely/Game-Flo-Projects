@@ -1,0 +1,61 @@
+name: Scrape media (sources.txt)
+
+on:
+  workflow_dispatch:
+    inputs:
+      allow_domains:
+        description: "Allowed domains"
+        required: false
+        default: "sites.google.com,googleusercontent.com,lh3.googleusercontent.com,ggpht.com,gstatic.com,ytimg.com,youtube.com,youtu.be,vimeo.com"
+      max_pages:
+        description: "Max pages per site"
+        required: false
+        default: "80"
+
+jobs:
+  scrape:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v4
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Install deps
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+
+      - name: Run scraper for each URL in scripts/sources.txt
+        env:
+          ALLOW: ${{ github.event.inputs.allow_domains }}
+          MAXP: ${{ github.event.inputs.max_pages }}
+        run: |
+          if [ ! -f scripts/sources.txt ]; then
+            echo "scripts/sources.txt not found"; exit 1
+          fi
+          while IFS= read -r U || [ -n "$U" ]; do
+            U_TRIM=$(echo "$U" | xargs)
+            if [ -n "$U_TRIM" ] && [ "${U_TRIM:0:1}" != "#" ]; then
+              echo "=== Scraping: $U_TRIM"
+              python scripts/scrape_media.py --start-url "$U_TRIM" --allow-domains "$ALLOW" --max-pages "$MAXP"
+            fi
+          done < scripts/sources.txt
+
+      - name: Commit results
+        run: |
+          git config user.name  "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -A
+          if ! git diff --cached --quiet; then
+            git commit -m "Import media from sources.txt"
+            git push
+          else
+            echo "No changes to commit."
+          fi
