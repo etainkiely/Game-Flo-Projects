@@ -1,0 +1,31 @@
+{
+  "childId": "child-aurora",
+  "childName": "Aurora",
+  "language": "en-US",
+  "weekStart": "2025-11-03",
+  "assignedBy": "Parent: E. Kiely",
+  "assignedAt": "2025-11-03T09:00:00Z",
+  "words": [
+    {
+      "id": "w1",
+      "text": "galaxy",
+      "hint": "something very big and full of stars",
+      "phonetic": "GAL-ax-ee",
+      "difficulty": 3
+    },
+    {
+      "id": "w2",
+      "text": "constellation",
+      "hint": "a pattern of stars",
+      "phonetic": "kon-STEH-lay-shun",
+      "difficulty": 4
+    },
+    {
+      "id": "w3",
+      "text": "orbit",
+      "hint": "path around a planet or star",
+      "phonetic": "OR-bit",
+      "difficulty": 2
+    }
+  ]
+}
