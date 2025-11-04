@@ -3,437 +3,266 @@
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width,initial-scale=1" />
-<title>SpellMoji — Spelling Game</title>
+<title>SpellMoji — Spelling Game (Cosmic)</title>
 <style>
 :root{
-  --bg:#f6fbff; --card:#fff; --panel:#eef6ff; --accent:#2b7cff; --accent-2:#49e3b6;
-  --text:#062033; --muted:#6b7280; --ok:#0db57d; --err:#e03e3e;
+  --bg-1:#04121a; --bg-2:#062b33;
+  --card: linear-gradient(180deg,#062b33 0%, #08323a 100%);
+  --accent:#00ffd1; --accent-2:#6be0ff;
+  --glow: rgba(107,224,255,0.16);
+  --text:#e6fbff; --muted:#9fd7de; --ok:#66ffb3; --err:#ff6b6b;
+  --card-shadow: 0 12px 40px rgba(3,10,20,0.6);
 }
 *{box-sizing:border-box}
-body{font-family:system-ui,-apple-system,Segoe UI,Roboto,"Helvetica Neue",Arial;background:linear-gradient(180deg,#eaf6ff 0%,#f6fbff 100%);margin:0;color:var(--text);padding:20px;display:flex;justify-content:center}
-.app{max-width:980px;width:100%}
-.header{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-bottom:12px}
-h1{margin:0;font-size:1.4rem}
-.badge{background:linear-gradient(90deg,var(--accent),var(--accent-2));color:white;padding:6px 10px;border-radius:999px;font-weight:700}
-.card{background:var(--card);border-radius:12px;padding:14px;box-shadow:0 6px 18px rgba(11,18,32,.06);margin-bottom:12px}
+html,body{height:100%}
+body{
+  margin:0;font-family:Inter,system-ui,-apple-system,"Segoe UI",Roboto,Arial;
+  background: radial-gradient(1200px 800px at 10% -10%,var(--bg-2) 0%, var(--bg-1) 45%) fixed;
+  color:var(--text);display:flex;justify-content:center;padding:28px;
+}
+.app{width:min(1100px,96vw)}
+.header{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:18px}
+h1{margin:0;font-size:clamp(20px,3vw,30px);letter-spacing:0.6px}
+.badge{background:linear-gradient(90deg,var(--accent),var(--accent-2));color:#021016;padding:8px 12px;border-radius:999px;font-weight:800;box-shadow:0 6px 26px rgba(43,206,255,0.08),0 0 24px var(--glow)}
+.card{background:var(--card);border-radius:16px;padding:16px;box-shadow:var(--card-shadow);border:1px solid rgba(255,255,255,0.04);margin-bottom:14px;backdrop-filter:blur(6px) saturate(1.1)}
 .row{display:flex;gap:10px;align-items:center;flex-wrap:wrap}
-label{font-weight:600;font-size:.95rem}
-textarea,input,select,button{font-size:1rem;padding:8px;border-radius:8px;border:1px solid #e6eefc}
-textarea{min-height:90px;width:100%}
-.controls{display:flex;gap:8px;flex-wrap:wrap}
-.emoji-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-top:8px}
-.emoji-btn{background:#fff;border-radius:10px;border:1px solid #e6eefc;padding:8px;font-size:26px;cursor:pointer}
-.emoji-btn.selected{outline:3px solid rgba(43,124,255,.12);transform:translateY(-2px)}
-.emoji-btn.disabled{opacity:.5;pointer-events:none}
-.center{text-align:center}
+.small{font-size:.92rem;color:var(--muted)}
 .muted{color:var(--muted)}
-.small{font-size:.9rem}
-.status{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
-.chip{background:#f1f8ff;padding:6px 10px;border-radius:999px;border:1px solid #dceeff}
-.letters{display:flex;gap:6px;margin-top:8px;flex-wrap:wrap}
-.letter{min-width:26px;padding:6px 8px;border-radius:8px;border:1px solid #eef6ff;background:#fbfdff;text-align:center}
-.letter.correct{background:#e6ffef;border-color:#8be59f}
-.letter.wrong{background:#ffecec;border-color:#ff9b9b;color:#9a1a1a}
-.feedback{font-weight:700;margin-top:8px}
-.hidden{display:none}
-.controls-right{margin-left:auto}
-.footer{font-size:.85rem;color:var(--muted);text-align:center;margin-top:6px}
-@media(max-width:700px){ .emoji-grid{grid-template-columns:repeat(2,1fr)} }
+label{font-weight:700;color:var(--muted)}
+textarea,input,select,button{font-size:1rem;padding:10px;border-radius:12px;border:1px solid rgba(255,255,255,0.04);background:transparent;color:var(--text)}
+textarea{min-height:110px;width:100%;resize:vertical;border:1px solid rgba(255,255,255,0.03)}
+.controls{display:flex;gap:10px}
+button{cursor:pointer;font-weight:700}
+button.primary{background:linear-gradient(90deg,var(--accent),var(--accent-2));color:#021016;border:none;padding:10px 14px;border-radius:12px;box-shadow:0 6px 18px rgba(11,17,26,0.35)}
+button.ghost{background:transparent;border:1px solid rgba(255,255,255,0.04);padding:8px 12px;border-radius:12px}
+/* emoji grid */
+.emoji-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(72px,1fr));gap:12px;margin-top:12px}
+.emoji-btn{display:inline-flex;align-items:center;justify-content:center;min-height:72px;min-width:72px;border-radius:14px;font-size:36px;background:linear-gradient(180deg,rgba(255,255,255,0.02), rgba(255,255,255,0.01));border:1px solid rgba(255,255,255,0.04);cursor:pointer;color:var(--text);transition:transform .12s ease,box-shadow .12s ease}
+.emoji-btn:hover{transform:translateY(-6px);box-shadow:0 18px 40px rgba(3,10,20,0.6),0 0 30px rgba(107,224,255,0.06)}
+.emoji-btn.correct{box-shadow:0 10px 30px rgba(0,255,209,0.06),0 0 18px rgba(107,224,255,0.12);outline:2px solid rgba(11,255,200,0.08)}
+.emoji-btn.wrong{opacity:.7;transform:translateY(0) scale(.98);outline:2px solid rgba(255,80,80,0.06)}
+.emoji-btn.disabled{pointer-events:none;opacity:.45}
+/* segments / spelling */
+.bigword{font-size:1rem;font-weight:800;margin-top:8px}
+.letters{display:flex;gap:8px;margin-top:10px;flex-wrap:wrap}
+.letter{min-width:40px;padding:8px 10px;border-radius:10px;text-align:center;background:linear-gradient(180deg,#00242a,#032a31);border:1px solid rgba(255,255,255,0.03);font-weight:700;color:var(--accent-2)}
+.letter.ok{background:linear-gradient(90deg,rgba(102,255,179,0.08),rgba(11,255,192,0.06));border-color:rgba(102,255,179,0.14);color:var(--ok)}
+.letter.bad{background:linear-gradient(90deg,rgba(255,107,107,0.06),rgba(255,50,50,0.02));border-color:rgba(255,107,107,0.12);color:var(--err)}
+.progress-bar{height:18px;background:linear-gradient(90deg,#052227 0%,#0a2f33 100%);border-radius:999px;border:1px solid rgba(255,255,255,0.04);overflow:hidden}
+.progress-fill{height:100%;width:0%;background:linear-gradient(90deg,var(--accent),var(--accent-2));transition:width 800ms cubic-bezier(.2,.9,.2,1)}
+.clock-display{display:flex;gap:12px;align-items:center;margin-top:10px}
+.clock-dial{width:84px;height:84px;border-radius:999px;background:linear-gradient(180deg,rgba(255,255,255,0.02),rgba(255,255,255,0.01));display:grid;place-items:center;font-weight:800;color:var(--text);border:1px solid rgba(255,255,255,0.04);position:relative;overflow:hidden}
+.clock-mins{font-size:20px}
+/* egg SVG styling */
+.egg-wrap{position:absolute;inset:6px;display:grid;place-items:center;pointer-events:none}
+.egg-tilt{transition:transform 520ms cubic-bezier(.2,.9,.2,1)}
+.egg-fill{transition:height 900ms cubic-bezier(.2,.9,.2,1)}
+.tilt{animation:tiltAnim 700ms ease}
+@keyframes tiltAnim{0%{transform:rotate(0deg)}40%{transform:rotate(-6deg) scale(1.03)}100%{transform:rotate(0deg) scale(1)}}
+/* toast */
+.toast{position:fixed;left:50%;transform:translateX(-50%);bottom:26px;background:linear-gradient(90deg,var(--accent),var(--accent-2));color:#002022;padding:12px 18px;border-radius:999px;display:none;box-shadow:0 12px 40px rgba(3,10,20,0.6)}
+@media(max-width:720px){ .emoji-btn{min-height:64px;min-width:64px;font-size:32px} .emoji-grid{grid-template-columns:repeat(3,1fr)} }
 </style>
 </head>
 <body>
-<div class="app" role="application" aria-label="SpellMoji spelling game">
-  <div class="header">
-    <h1>SpellMoji <span class="badge">v1</span></h1>
-    <div class="small muted">Pedagogy: emoji understanding → produce spelling → review → reward</div>
-  </div>
-
-  <!-- Setup -->
-  <section class="card" aria-labelledby="setupTitle">
-    <h2 id="setupTitle">1) Build your list</h2>
-    <div class="small muted">Enter one word per line. Optional: use " | emoji" after the word to set the correct emoji (e.g. "apple | 🍎"). Choose language for speech.</div>
-    <label for="wordList">Spellings (one per line)</label>
-    <textarea id="wordList" placeholder="Example:
-apple | 🍎
-múinteoir | 👩‍🏫
-family"></textarea>
-
-    <div class="row" style="margin-top:8px">
-      <label class="small">Language
-        <select id="voiceLang">
-          <option value="en-IE">English (Irish accent)</option>
-          <option value="en-US">English (US)</option>
-          <option value="en-GB">English (UK)</option>
-          <option value="ga-IE">Gaeilge (Irish)</option>
-        </select>
-      </label>
-
-      <label class="small">Reward per mastered (seconds)
-        <select id="rewardPer">
-          <option value="30">30s</option>
-          <option value="60" selected>60s</option>
-          <option value="90">90s</option>
-        </select>
-      </label>
-
-      <div class="controls controls-right">
-        <button id="loadBtn" class="primary">Load words</button>
-        <button id="startBtn">Start practice</button>
-        <button id="resetBtn">Reset</button>
-      </div>
-    </div>
-    <p class="small muted" style="margin-top:8px">Tip: If you include an emoji after a pipe it will be used as the correct answer in the matching step.</p>
-  </section>
-
-  <!-- Session -->
-  <section id="session" class="card hidden" aria-live="polite">
-    <div class="row" style="align-items:center">
-      <div>
-        <div class="muted small">Progress</div>
-        <div id="progressText"><span id="curIndex">0</span> / <span id="totalCount">0</span></div>
-      </div>
-
-      <div class="controls">
-        <button id="sayBtn">🔊 Say again</button>
-        <button id="replayAudio" class="hidden">Replay</button>
-      </div>
-
-      <div class="controls controls-right">
-        <div class="chip">Mastered: <span id="masteredCount">0</span></div>
-        <div class="chip">Missed: <span id="missedCount">0</span></div>
-      </div>
+  <div class="app" role="application" aria-label="SpellMoji cosmic spelling game">
+    <div class="header">
+      <h1>SpellMoji <span class="badge">cosmic</span></h1>
+      <div class="small muted">Dark teal — phonetic segments & device time rewards</div>
     </div>
 
-    <hr style="margin:10px 0">
+    <section class="card" id="setupCard">
+      <h2>1) Build your list</h2>
+      <div class="small muted">One word per line. Optional: "word | emoji" to pin a teacher emoji (e.g. apple | 🍎).</div>
+      <label class="small" for="wordList">Spellings</label>
+      <textarea id="wordList" placeholder="apple | 🍎
+muinteoir | 👩‍🏫
+because"></textarea>
 
-    <div id="stepEmoji">
-      <div class="muted small">2) Emoji match — show understanding: pick the correct emoji</div>
-      <div id="emojiPrompt" class="center" style="margin-top:8px"></div>
-      <div id="emojiGrid" class="emoji-grid" role="list"></div>
-      <div id="emojiFeedback" class="small muted" style="margin-top:6px"></div>
-    </div>
-
-    <div id="stepSpell" class="hidden" style="margin-top:12px">
-      <div class="muted small">3) Spell the word you hear (type only letters)</div>
-      <div style="margin-top:8px">
-        <input id="spellingInput" type="text" inputmode="text" placeholder="Type the spelling..." style="width:100%;padding:10px;border-radius:8px;border:1px solid #e6eefc" />
-        <div id="letterFeedback" class="letters" aria-live="polite"></div>
-        <div id="phoneticHint" class="small muted" style="margin-top:6px"></div>
-        <div class="row" style="margin-top:8px">
-          <button id="submitBtn" class="primary">Submit</button>
-          <button id="hintBtn">Phonetic hint</button>
-          <button id="skipBtn">Skip</button>
-        </div>
-      </div>
-    </div>
-
-    <div id="endSession" class="hidden" style="margin-top:12px">
-      <h3 class="center">Session summary</h3>
-      <p class="center small muted">Mastered: <span id="sumMastered">0</span> | Need practice: <span id="sumMissed">0</span></p>
-
-      <div class="row" style="justify-content:center;margin-top:8px">
-        <label class="small">Bonus per retry:
-          <select id="bonusPer">
-            <option value="0">No bonus</option>
-            <option value="30">+30s</option>
-            <option value="60" selected>+60s</option>
+      <div class="row" style="margin-top:12px;">
+        <label class="small">Language
+          <select id="voiceLang">
+            <option value="en-IE">English (Irish accent)</option>
+            <option value="en-GB">English (UK)</option>
+            <option value="en-US">English (US)</option>
+            <option value="ga-IE">Gaeilge (Irish)</option>
           </select>
         </label>
-        <button id="claimReward">Claim reward</button>
-      </div>
 
-      <div class="center" style="margin-top:10px">
-        <button id="retryMissed">Practice missed words again</button>
-        <button id="finishBtn">Finish</button>
-      </div>
-
-      <div id="rewardArea" class="hidden" style="margin-top:12px">
-        <div class="small muted center">Reward time available: <span id="rewardSeconds">0</span>s</div>
-        <div class="center" style="margin-top:6px">
-          <button id="startTimer">Start timer</button>
+        <div class="controls" style="margin-left:auto;">
+          <button class="ghost" id="btnExport">Export</button>
+          <button class="ghost" id="btnImport">Import</button>
+          <button class="primary" id="btnBuild">Load & start</button>
         </div>
-        <div id="timerDisplay" class="center small muted" style="margin-top:6px"></div>
       </div>
-    </div>
 
-  </section>
+      <p class="small muted" style="margin-top:10px;">Rewards: each correct full spelling = 3 minutes. Repeat a word correctly 3 times to master it and gain +2 minute mastery bonus per mastered word. Device time meter shows accumulated minutes.</p>
+    </section>
 
-  <p class="footer">Uses your browser's speech synthesis. Works locally; the timer is a helper for device time management.</p>
-</div>
+    <section class="card" id="sessionCard" style="display:none">
+      <div class="row" style="justify-content:space-between;align-items:center">
+        <div>
+          <div class="small muted">Progress</div>
+          <div id="progressText"><span id="curIndex">0</span> / <span id="totalCount">0</span></div>
+        </div>
+        <div class="row">
+          <button class="ghost" id="btnSay">🔊 Say again</button>
+          <button class="ghost" id="btnHint">🔉 Hear next segment</button>
+        </div>
+        <div style="margin-left:auto" class="row">
+          <div class="small muted pill">Mastered: <span id="masteredCount">0</span></div>
+          <div class="small muted pill">Missed: <span id="missedCount">0</span></div>
+          <button id="btnPracticeMastery" class="ghost" title="Practice words to reach mastery" style="margin-left:8px;">Practice to master</button>
+        </div>
+      </div>
+
+      <hr style="margin:12px 0;border-color:rgba(255,255,255,0.03)">
+
+      <div id="emojiStep">
+        <div class="small muted">2) Pick the emoji that matches the word's meaning</div>
+        <div class="bigword" id="promptText">Listen — then choose the matching emoji</div>
+        <div id="emojiGrid" class="emoji-grid" role="list" aria-label="emoji choices"></div>
+        <div id="emojiHint" class="small muted" style="margin-top:8px"></div>
+      </div>
+
+      <div id="spellStep" style="display:none;margin-top:14px">
+        <div class="small muted">3) Build the word by typing one spoken segment at a time</div>
+        <div style="margin-top:8px">
+          <div id="segments" class="letters" aria-live="polite"></div>
+          <input id="spellingInput" type="text" placeholder="Type the next segment..." autocomplete="off" style="margin-top:10px;width:100%;"/>
+          <div class="row" style="margin-top:8px;">
+            <button class="primary" id="btnSubmit">Submit segment</button>
+            <button class="ghost" id="btnSkip">Skip word</button>
+            <button class="ghost" id="btnReveal">Reveal segment</button>
+          </div>
+          <div id="spellFeedback" class="small muted" style="margin-top:8px"></div>
+        </div>
+      </div>
+
+      <div style="margin-top:12px;">
+        <div class="small muted">Device time earned</div>
+        <div class="clock-display">
+          <div class="clock-dial" id="clockDial">
+            <div class="clock-mins" id="clockMins">0m</div>
+            <div class="egg-wrap">
+              <!-- simple egg SVG with a rect fill that we adjust by JS -->
+              <svg class="egg-tilt" width="48" height="60" viewBox="0 0 48 60" xmlns="http://www.w3.org/2000/svg">
+                <defs>
+                  <clipPath id="eggClip">
+                    <path d="M24 0 C36 0 46 12 46 24 C46 36 36 60 24 60 C12 60 2 36 2 24 C2 12 12 0 24 0 Z" />
+                  </clipPath>
+                </defs>
+                <rect id="eggFill" x="2" y="60" width="44" height="0" fill="url(#eggGrad)" clip-path="url(#eggClip)"></rect>
+                <path d="M24 0 C36 0 46 12 46 24 C46 36 36 60 24 60 C12 60 2 36 2 24 C2 12 12 0 24 0 Z" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="1" />
+                <defs>
+                  <linearGradient id="eggGrad" x1="0" x2="0" y1="0" y2="1">
+                    <stop offset="0%" stop-color="#6be0ff" />
+                    <stop offset="100%" stop-color="#00ffd1" />
+                  </linearGradient>
+                </defs>
+              </svg>
+            </div>
+          </div>
+          <div style="flex:1">
+            <div class="progress-bar" aria-hidden="true"><div id="progressFill" class="progress-fill"></div></div>
+            <div class="small muted" style="margin-top:6px">Target: <span id="targetMins">60</span> minutes</div>
+          </div>
+        </div>
+      </div>
+
+      <div id="endStep" style="display:none;margin-top:12px">
+        <h3 class="small muted">Session summary</h3>
+        <p class="small muted">Mastered: <span id="sumMastered">0</span> | Need practice: <span id="sumMissed">0</span></p>
+        <div class="row" style="justify-content:center;margin-top:8px">
+          <button id="btnRestart" class="primary">Practice missed again</button>
+          <button id="btnFinish" class="ghost">Finish</button>
+        </div>
+      </div>
+    </section>
+
+    <div id="toast" class="toast" role="status" aria-live="polite"></div>
+  </div>
 
 <script>
-// --- Utilities & state ---
-const $ = id => document.getElementById(id);
-let state = {
-  entries: [], // {word, emoji, chosenEmoji, status:'new'|'mastered'|'missed', attempts:0}
-  index: 0,
-  rewardSeconds: 0,
-  retryMode: false
+const STORE_KEY = 'spellmoji_cosmic_v2';
+const BASE_MIN_PER_CORRECT = 3;
+const MASTERY_REPEAT_REQUIRED = 3;
+const MASTERY_BONUS_MIN_PER_WORD = 2;
+const PROGRESS_TARGET_MIN = 60;
+let state = { entries: [], progress: { order: [], pos: 0, wrong: [], bankMin: 0, earnedMin: 0, review: false } };
+const DOM = {
+  wordList: document.getElementById('wordList'),
+  btnBuild: document.getElementById('btnBuild'),
+  btnExport: document.getElementById('btnExport'),
+  btnImport: document.getElementById('btnImport'),
+  sessionCard: document.getElementById('sessionCard'),
+  emojiGrid: document.getElementById('emojiGrid'),
+  promptText: document.getElementById('promptText'),
+  emojiHint: document.getElementById('emojiHint'),
+  btnSay: document.getElementById('btnSay'),
+  btnHint: document.getElementById('btnHint'),
+  spellStep: document.getElementById('spellStep'),
+  segmentsDiv: document.getElementById('segments'),
+  spellingInput: document.getElementById('spellingInput'),
+  btnSubmit: document.getElementById('btnSubmit'),
+  btnSkip: document.getElementById('btnSkip'),
+  btnReveal: document.getElementById('btnReveal'),
+  curIndex: document.getElementById('curIndex'),
+  totalCount: document.getElementById('totalCount'),
+  masteredCount: document.getElementById('masteredCount'),
+  missedCount: document.getElementById('missedCount'),
+  toast: document.getElementById('toast'),
+  progressFill: document.getElementById('progressFill'),
+  clockMins: document.getElementById('clockMins'),
+  targetMins: document.getElementById('targetMins'),
+  endStep: document.getElementById('endStep'),
+  sumMastered: document.getElementById('sumMastered'),
+  sumMissed: document.getElementById('sumMissed'),
+  btnRestart: document.getElementById('btnRestart'),
+  btnFinish: document.getElementById('btnFinish'),
+  btnPracticeMastery: document.getElementById('btnPracticeMastery'),
+  clockDial: document.getElementById('clockDial'),
+  eggFill: document.getElementById('eggFill'),
+  voiceLang: document.getElementById('voiceLang')
 };
-const STORAGE_KEY = 'spellmoji_state_v2';
-
-// --- DOM refs
-const loadBtn = $('loadBtn'), startBtn = $('startBtn'), resetBtn = $('resetBtn');
-const session = $('session'), emojiGrid = $('emojiGrid'), emojiFeedback = $('emojiFeedback');
-const stepEmoji = $('stepEmoji'), stepSpell = $('stepSpell'), spellingInput = $('spellingInput');
-const submitBtn = $('submitBtn'), hintBtn = $('hintBtn'), skipBtn = $('skipBtn'), sayBtn = $('sayBtn');
-const letterFeedback = $('letterFeedback'), phoneticHint = $('phoneticHint');
-const curIndex = $('curIndex'), totalCount = $('totalCount'), masteredCount = $('masteredCount'), missedCount = $('missedCount');
-const endSession = $('endSession'), sumMastered = $('sumMastered'), sumMissed = $('sumMissed');
-const retryMissed = $('retryMissed'), finishBtn = $('finishBtn'), claimReward = $('claimReward'), rewardSecondsEl = $('rewardSeconds');
-const startTimer = $('startTimer'), timerDisplay = $('timerDisplay'), bonusPer = $('bonusPer');
-const loadLang = $('voiceLang'), rewardPer = $('rewardPer');
-const wordListTA = $('wordList');
-
-// --- Persistence
-function save() { localStorage.setItem(STORAGE_KEY, JSON.stringify(state)); }
-function load() {
-  try {
-    const raw = localStorage.getItem(STORAGE_KEY);
-    if (raw) state = JSON.parse(raw);
-  } catch(e){}
-}
-load();
-
-// --- Parsing input
-function parseList(text) {
-  return text.split(/\r?\n/).map(l => l.trim()).filter(Boolean).map(l => {
-    const parts = l.split('|').map(p=>p.trim());
-    return { word: parts[0], emoji: parts[1]||'', chosenEmoji:'', status:'new', attempts:0 };
-  });
-}
-
-// --- Build 4-choice emoji set for one correct emoji
-const DEFAULT_POOL = ['🍎','🍌','🍓','🍕','🍪','👩‍🏫','🏫','🏠','🚗','🐶','🐱','🦋','🌳','☕️','🎁','⚽','🎸','📚','✏️','🎂','🍟'];
-function makeChoices(correct) {
-  const pool = Array.from(new Set([correct, ...DEFAULT_POOL])).filter(Boolean);
-  // pick 3 random distractors not equal to correct
-  const distractors = pool.filter(p=>p!==correct);
-  shuffle(distractors);
-  const choices = [correct, ...distractors.slice(0,3)];
-  shuffle(choices);
-  return choices;
-}
-
-// --- Helpers
-function shuffle(a){ for(let i=a.length-1;i>0;i--){ const j=Math.floor(Math.random()*(i+1)); [a[i],a[j]]=[a[j],a[i]]; } }
-function speak(text) {
-  if(!window.speechSynthesis) return;
-  const u = new SpeechSynthesisUtterance(text);
-  u.lang = loadLang.value || 'en-IE';
-  const voices = speechSynthesis.getVoices();
-  // pick voice best match
-  const pref = voices.find(v=>v.lang && v.lang.startsWith(u.lang.split('-')[0]));
-  if(pref) u.voice = pref;
-  u.rate = 0.95;
-  speechSynthesis.cancel();
-  speechSynthesis.speak(u);
-}
-
-// --- UI: Load & start ---
-loadBtn.addEventListener('click', ()=>{
-  const raw = wordListTA.value.trim();
-  if(!raw){ alert('Please enter at least one word.'); return; }
-  state.entries = parseList(raw);
-  // if entries had emoji in source, keep as correct; otherwise choose later
-  state.index = 0; state.rewardSeconds = state.rewardSeconds || 0; state.retryMode = false;
-  state.entries.forEach(e=>{ if(!e.emoji) e.emoji = ''; e.status='new'; e.attempts=0; });
-  save();
-  totalCount.textContent = state.entries.length;
-  curIndex.textContent = 0;
-  masteredCount.textContent = 0;
-  missedCount.textContent = 0;
-  alert(`Loaded ${state.entries.length} words. Proceed to Emoji match step.`);
-  switchToSession();
-  renderCurrentEmojiChoices();
-});
-
-startBtn.addEventListener('click', ()=> {
-  if(!state.entries || !state.entries.length) {
-    // try to build from textarea automatically
-    state.entries = parseList(wordListTA.value || '');
-    if(!state.entries.length){ alert('Add words first'); return; }
-  }
-  state.index = 0;
-  state.entries.forEach(e=>{ e.status='new'; e.attempts=0; e.chosenEmoji=''; });
-  state.rewardSeconds = 0;
-  state.retryMode = false;
-  save();
-  totalCount.textContent = state.entries.length;
-  switchToSession();
-  renderCurrentEmojiChoices();
-});
-
-// Reset
-resetBtn.addEventListener('click', ()=>{
-  if(confirm('Reset everything (clears saved progress)?')) {
-    state = {entries:[],index:0,rewardSeconds:0,retryMode:false};
-    localStorage.removeItem(STORAGE_KEY);
-    location.reload();
-  }
-});
-
-// --- Session flow & rendering ---
-function switchToSession(){
-  session.classList.remove('hidden');
-  $('stepSpell').classList.add('hidden'); // ensure emoji first
-  stepEmoji.classList.remove('hidden');
-  stepSpell.classList.add('hidden');
-  endSession.classList.add('hidden');
-  updateCounts();
-}
-
-function updateCounts(){
-  const total = state.entries.length || 0;
-  const mastered = state.entries.filter(e=>e.status==='mastered').length;
-  const missed = state.entries.filter(e=>e.status==='missed').length;
-  totalCount.textContent = total;
-  masteredCount.textContent = mastered;
-  missedCount.textContent = missed;
-  curIndex.textContent = Math.min(state.index+1, total);
-}
-
-// Render emoji choices for current entry
-function renderCurrentEmojiChoices(){
-  emojiGrid.innerHTML = '';
-  emojiFeedback.textContent = '';
-  const e = state.entries[state.index];
-  if(!e) { endRun(); return; }
-  // determine correct emoji:
-  const correct = e.emoji || pickEmojiForWord(e.word) || '⭐';
-  const choices = makeChoices(correct);
-  choices.forEach(ch => {
-    const btn = document.createElement('button');
-    btn.className='emoji-btn';
-    btn.setAttribute('aria-label','emoji choice');
-    btn.innerText = ch;
-    btn.addEventListener('click', ()=> onEmojiSelected(ch));
-    emojiGrid.appendChild(btn);
-  });
-  // prompt speak-only
-  speak(e.word);
-}
-
-// Auto pick a sensible emoji for a word (very lightweight heuristics)
-function pickEmojiForWord(word){
-  const w = word.toLowerCase();
-  if(/\\b(cat|dog|fish|horse|cow|sheep|pig)\\b/.test(w)) return '🐶';
-  if(/\\b(apple|banana|cake|cookie|pizza|burger|chips|chips|chocolate)\\b/.test(w)) return '🍪';
-  if(/\\b(school|teacher|class|teach|múinteoir)\\b/.test(w)) return '👩‍🏫';
-  if(/\\b(home|house|apartment|árasán)\\b/.test(w)) return '🏠';
-  if(/\\b(car|bus|train|bike|plane|rocket)\\b/.test(w)) return '🚗';
-  if(/\\b(book|read|library)\\b/.test(w)) return '📚';
-  if(/\\b(music|song|sing|guitar)\\b/.test(w)) return '🎸';
-  return '' ;
-}
-
-// When child picks an emoji
-function onEmojiSelected(chosen){
-  const e = state.entries[state.index];
-  // determine correct emoji
-  const correct = e.emoji || pickEmojiForWord(e.word) || '⭐';
-  if(chosen === correct){
-    // good — allow move to spelling step
-    e.chosenEmoji = chosen;
-    emojiFeedback.textContent = 'Great choice! Now spell the word.';
-    // disable emoji area and show spelling step
-    Array.from(emojiGrid.children).forEach(b=>b.classList.add('disabled'));
-    setTimeout(()=> {
-      stepEmoji.classList.add('hidden');
-      stepSpell.classList.remove('hidden');
-      spellingInput.focus();
-    }, 600);
-  } else {
-    // wrong pick — gentle feedback, allow retry (max 2 wrong emoji attempts)
-    e.attempts = (e.attempts || 0) + 1;
-    emojiFeedback.textContent = e.attempts < 2 ? 'Not quite — try another emoji. Think about the meaning.' : 'Still not correct — we will mark this for review and continue.';
-    if(e.attempts >= 2){
-      e.status = 'missed';
-      state.rewardSeconds = state.rewardSeconds; // no reward
-      // move on to spelling step still but note incorrect
-      e.chosenEmoji = chosen;
-      Array.from(emojiGrid.children).forEach(b=>b.classList.add('disabled'));
-      setTimeout(()=> {
-        stepEmoji.classList.add('hidden');
-        stepSpell.classList.remove('hidden');
-        spellingInput.focus();
-      }, 700);
-    }
-  }
-  save();
-  updateCounts();
-}
-
-// Spell step: submit handler
-submitBtn.addEventListener('click', checkSpelling);
-spellingInput.addEventListener('keydown', e => { if(e.key==='Enter') checkSpelling(); });
-
-function normalize(s){ return s.normalize('NFKC').replace(/[^A-Za-zÀ-ÖØ-öø-ÿ']/g,'').toLowerCase(); }
-
-function checkSpelling(){
-  const e = state.entries[state.index];
-  if(!e) return;
-  const guess = (spellingInput.value||'').trim();
-  if(!guess){ alert('Type the spelling before submitting.'); return; }
-  const correct = normalize(e.word);
-  const attempt = normalize(guess);
-  renderLetterFeedback(e.word, guess);
-  if(attempt === correct){
-    // correct
-    e.status = 'mastered';
-    state.rewardSeconds += parseInt(rewardPer.value || '60',10);
-    $('phoneticHint').textContent = '';
-    // immediate positive feedback
-    showFeedback('Correct! +'+(rewardPer.value||'60')+'s', true);
-    // advance after a short pause
-    setTimeout(()=> { state.index++; proceedOrEnd(); }, 700);
-  } else {
-    // wrong spelling
-    e.status = 'missed';
-    e.attempts = (e.attempts||0)+1;
-    showFeedback('Not quite — try again. Use hint if needed.', false);
-    phoneticHint.textContent = buildPhoneticHint(e.word, guess);
-    save();
-  }
-  save(); updateCounts();
-}
-
-function renderLetterFeedback(target, guess){
-  letterFeedback.innerHTML = '';
-  const maxL = Math.max(target.length, guess.length);
-  for(let i=0;i<maxL;i++){
-    const t = target[i]||'';
-    const g = guess[i]||'';
-    const span = document.createElement('div');
-    span.className = 'letter';
-    if(!g) span.textContent = '_';
-    else if(g.toLowerCase() === (t||'').toLowerCase()){
-      span.textContent = g;
-      span.classList.add('correct');
-    } else {
-      span.textContent = g;
-      span.classList.add('wrong');
-    }
-    letterFeedback.appendChild(span);
-  }
-}
-
-// Phonetic hint builder (simple, scaffold)
-function buildPhoneticHint(word, guess){
-  const vowels = /[aeiouáéíóú]/i;
-  const lower = word.toLowerCase();
-  const firstV = lower.match(vowels);
-  const pos = firstWrongPos(guess, word);
-  let hint = '';
-  if(pos>=0){
-    const seg = word.slice(0,pos+1);
-    hint = `Build the word: \\n`;  
-
-    return hint;
-  }
-  return hint;
-}
-// Add more functions as needed...
+// voices
+let voices = []; function loadVoices(){ voices = speechSynthesis.getVoices(); } window.speechSynthesis.onvoiceschanged = loadVoices; loadVoices();
+function speak(text, lang){ if(!text) return; const u = new SpeechSynthesisUtterance(text); u.lang = lang || DOM.voiceLang.value || 'en-IE'; const pref = voices.find(v=>v.lang===u.lang) || voices.find(v=>v.lang && v.lang.startsWith(u.lang.split('-')[0])) || voices[0]; if(pref) u.voice = pref; u.rate = 0.95; u.pitch = 1; speechSynthesis.cancel(); speechSynthesis.speak(u); }
+function saveState(){ localStorage.setItem(STORE_KEY, JSON.stringify(state)); }
+function loadState(){ try{ const raw = localStorage.getItem(STORE_KEY); if(raw) state = JSON.parse(raw); }catch(e){} }
+function showToast(msg,ms=1400){ DOM.toast.textContent = msg; DOM.toast.style.display='block'; setTimeout(()=>DOM.toast.style.display='none',ms); }
+function parseLines(text){ return text.split(/\r?\n/).map(l=>l.trim()).filter(Boolean).map(l=>{ const parts = l.split('|').map(p=>p.trim()); return { word: parts[0], emoji: parts[1]||'', segments: [], currentSegmentIndex:0, repeatCorrect:0, stats:{seen:0,correct:0,mastered:false}, attempts:0 }; }); }
+const GRAPHEMES = ['tch','igh','dge','sch','chr','thr','shr','dge','str','spl','qu','ng','ch','sh','th','ph','wh','ck','ai','ea','ee','ie','oo','oa','ow','oi','oy','au','aw','ar','ir','ur','or','er'];
+function segmentWord(word){ const letters = Array.from(word.normalize('NFC')); const segments = []; for(let i=0;i<letters.length;){ let matched = null; for(const L of [3,2]){ const slice = letters.slice(i,i+L).join('').toLowerCase(); if(GRAPHEMES.includes(slice)){ matched = letters.slice(i,i+L).join(''); break; } } if(!matched){ if(letters[i].trim() === ''){ matched = letters[i]; } else { matched = letters[i]; } } segments.push(matched); i += matched.length; } if(segments.length >= word.length && word.length > 4){ const alt=[]; let i=0; while(i<letters.length){ let found=false; for(const g of ['th','sh','ch','ng','ph','ck','qu','ea','ee','ie','oo','ai','ow','oi','oy']){ const s = letters.slice(i,i+g.length).join('').toLowerCase(); if(s===g){ alt.push(letters.slice(i,i+g.length).join('')); i+=g.length; found=true; break; } } if(!found){ alt.push(letters[i]); i++; } } if(alt.length < segments.length) return alt; } return segments; }
+const EMOJI_SETS = { animals:['🐶','🐱','🐭','🐹','🐰','🦊','🐻','🐼','🐨','🐯'], foods:['🍎','🍌','🍓','🍕','🍪','🍰','🍟','🍫','🍩','🍞'], transport:['🚗','🚌','🚲','✈️','🚀','🚂','🚕','🚙'], feelings:['😀','😂','😢','😡','😮','😴','😍','🤩'], objects:['📚','✏️','🎁','🔑','🧸','⌚️','📦'] };
+function pickCategoryFor(word){ const w = word.toLowerCase(); if(/\b(cat|dog|fish|rabbit|bear|fox)\b/.test(w)) return 'animals'; if(/\b(apple|banana|cake|cookie|pizza|burger|bread|food|fruit)\b/.test(w)) return 'foods'; if(/\b(car|bus|train|plane|bike|rocket|taxi)\b/.test(w)) return 'transport'; if(/\b(laugh|smile|happy|sad|angry|love|tired|excited)\b/.test(w)) return 'feelings'; if(/\b(book|read|library|key|gift|toy|watch|phone)\b/.test(w)) return 'objects'; return ''; }
+function makeSemanticChoices(correctEmoji, word){ const cat = pickCategoryFor(word); let pool = cat && EMOJI_SETS[cat] ? EMOJI_SETS[cat].slice() : [].concat(...Object.values(EMOJI_SETS)); if(correctEmoji && !pool.includes(correctEmoji)) pool.unshift(correctEmoji); pool = pool.filter(e=>e!==correctEmoji); shuffle(pool); const distractors = pool.slice(0,3); const choices = [correctEmoji, ...distractors].filter(Boolean); shuffle(choices); return choices; }
+function suggestEmoji(word){ const cat = pickCategoryFor(word); if(cat && EMOJI_SETS[cat]) return EMOJI_SETS[cat][0]; if(word.toLowerCase().includes('laugh') || word.toLowerCase().includes('happy')) return '😂'; if(word.toLowerCase().includes('star')) return '✨'; if(word.toLowerCase().includes('dog')) return '🐶'; if(word.toLowerCase().includes('apple')) return '🍎'; if(word.toLowerCase().includes('book')||word.toLowerCase().includes('read')) return '📚'; return '⭐'; }
+function buildList(){ const raw = DOM.wordList.value; const entries = parseLines(raw); if(!entries.length){ alert('Please add words'); return; } entries.forEach(e=>{ e.segments = segmentWord(e.word); e.currentSegmentIndex = 0; e.repeatCorrect = e.repeatCorrect || 0; e.stats = e.stats || {seen:0,correct:0,mastered:false}; e.attempts = 0; e.emoji = e.emoji || suggestEmoji(e.word); }); state.entries = entries; state.progress = { order:[...Array(entries.length).keys()], pos:0, wrong:[], bankMin:0, earnedMin:0, review:false }; shuffle(state.progress.order); saveState(); DOM.totalCount.textContent = entries.length; DOM.sessionCard.style.display = 'block'; renderCurrentChoices(); updateCounts(); showToast('List loaded — emoji step'); }
+function renderCurrentChoices(){ DOM.emojiGrid.innerHTML=''; DOM.emojiHint.textContent = ''; const idx = state.progress.order[state.progress.pos]; if(idx === undefined){ finishRound(); return; } const entry = state.entries[idx]; DOM.curIndex.textContent = state.progress.pos+1; DOM.promptText.textContent = 'Listen — then choose the matching emoji'; const choices = makeSemanticChoices(entry.emoji, entry.word); choices.forEach(ch=>{ const b = document.createElement('button'); b.className='emoji-btn'; b.type='button'; b.innerText = ch; b.setAttribute('aria-label', `emoji ${ch}`); b.onclick = ()=> onEmojiPick(ch, b, entry); DOM.emojiGrid.appendChild(b); }); speak(entry.word); DOM.spellStep.style.display = 'none'; DOM.spellingInput.value = ''; DOM.spellingInput.disabled = true; updateCounts(); }
+function onEmojiPick(chosen, btn, entry){ const all = Array.from(document.querySelectorAll('.emoji-btn')); all.forEach(x=>x.classList.add('disabled')); entry.attempts = (entry.attempts||0) + 1; const correct = entry.emoji || suggestEmoji(entry.word); if(chosen === correct){ btn.classList.add('correct'); DOM.emojiHint.textContent = 'Great — now build the word segment by segment.'; entry.currentSegmentIndex = 0; setTimeout(()=>{ DOM.spellStep.style.display='block'; DOM.spellingInput.disabled=false; revealSegment(entry); DOM.spellingInput.focus(); }, 420); showToast('✅ Correct — start segments', 900); } else { btn.classList.add('wrong'); DOM.emojiHint.textContent = 'Not that one — try another or continue to spell.'; showToast('Try again — choose the matching emoji', 900); setTimeout(()=>{ all.forEach(b=>{ if(!b.classList.contains('wrong')) b.classList.remove('disabled'); }); if(entry.attempts >= 2){ entry.status = 'missed'; DOM.emojiHint.textContent = 'Marked for review — now spell the word.'; DOM.spellStep.style.display = 'block'; DOM.spellingInput.disabled = false; revealSegment(entry); DOM.spellingInput.focus(); } },700); } saveState(); }
+function revealSegment(entry){ DOM.segmentsDiv.innerHTML = ''; const segs = entry.segments || segmentWord(entry.word); for(let i=0;i<segs.length;i++){ const span = document.createElement('div'); span.className = 'letter'; if(i < entry.currentSegmentIndex){ span.textContent = segs[i]; span.classList.add('ok'); } else if(i === entry.currentSegmentIndex){ span.textContent = '▮'; span.style.opacity = '0.7'; } else { span.textContent = '·'; span.style.opacity = '0.45'; } DOM.segmentsDiv.appendChild(span); } const next = segs[entry.currentSegmentIndex] || ''; if(next) speak(next, DOM.voiceLang.value); DOM.spellingInput.value = ''; DOM.spellingInput.focus(); }
+DOM.btnSubmit.addEventListener('click', submitSegment);
+DOM.spellingInput.addEventListener('keydown', e=>{ if(e.key === 'Enter') submitSegment(); });
+function submitSegment(){ const idx = state.progress.order[state.progress.pos]; if(idx === undefined) return; const entry = state.entries[idx]; const segs = entry.segments; const nextIndex = entry.currentSegmentIndex || 0; const expected = (segs[nextIndex]||'').trim(); const attempt = (DOM.spellingInput.value||'').trim(); if(normalizeSegment(attempt) === normalizeSegment(expected)){ entry.currentSegmentIndex = nextIndex + 1; if(entry.currentSegmentIndex >= segs.length){ entry.stats.seen = (entry.stats.seen||0) + 1; entry.stats.correct = (entry.stats.correct||0) + 1; entry.repeatCorrect = (entry.repeatCorrect||0) + 1; state.progress.bankMin += BASE_MIN_PER_CORRECT; state.progress.earnedMin += BASE_MIN_PER_CORRECT; if(!entry.stats.mastered && entry.repeatCorrect >= MASTERY_REPEAT_REQUIRED){ entry.stats.mastered = true; state.progress.bankMin += MASTERY_BONUS_MIN_PER_WORD; state.progress.earnedMin += MASTERY_BONUS_MIN_PER_WORD; showToast(`✨ Mastered! +${MASTERY_BONUS_MIN_PER_WORD}m bonus`,1200); animateClock(); } else { showToast(`✅ Word complete: +${BASE_MIN_PER_CORRECT}m`,900); animateClock(); } state.progress.pos++; saveState(); setTimeout(()=> renderCurrentChoices(), 550); } else { revealSegment(entry); showToast('✅ Segment correct',700); } } else { DOM.spellFeedback.textContent = `Not quite — try the segment again.`; const i = idx; if(!state.progress.wrong.includes(i)) state.progress.wrong.push(i); speakSegmentSlow(expected); saveState(); } updateCounts(); }
+DOM.btnSkip.addEventListener('click', ()=>{ const idx = state.progress.order[state.progress.pos]; if(idx === undefined) return; if(!state.progress.wrong.includes(idx)) state.progress.wrong.push(idx); state.progress.pos++; saveState(); renderCurrentChoices(); }); DOM.btnReveal.addEventListener('click', ()=>{ const idx = state.progress.order[state.progress.pos]; if(idx === undefined) return; const entry = state.entries[idx]; const seg = entry.segments[entry.currentSegmentIndex] || ''; DOM.spellingInput.value = seg; DOM.spellFeedback.textContent = `Revealed: "${seg}"`; speak(seg); });
+function speakSegmentSlow(seg){ const parts = Array.from(seg); let i=0; const t = setInterval(()=>{ if(i>=parts.length){ clearInterval(t); return; } speak(parts[i], DOM.voiceLang.value); i++; }, 420); }
+function normalizeSegment(s){ return (s||'').normalize('NFKC').toLowerCase().replace(/\s+/g,' ').trim(); } function shuffle(a){ for(let i=a.length-1;i>0;i--){ const j=Math.floor(Math.random()*(i+1)); [a[i],a[j]]=[a[j],a[i]]; } return a; }
+function finishRound(){ DOM.emojiGrid.innerHTML=''; DOM.emojiHint.textContent = ''; DOM.spellStep.style.display='none'; DOM.endStep.style.display='block'; DOM.sumMastered.textContent = state.entries.filter(e=>e.stats.mastered).length; DOM.sumMissed.textContent = (state.progress.wrong||[]).length; }
+function updateCounts(){ DOM.curIndex.textContent = Math.min(state.progress.pos+1, state.progress.order.length || 0); DOM.totalCount.textContent = state.entries.length || 0; DOM.masteredCount.textContent = state.entries.filter(e=>e.stats.mastered).length; DOM.missedCount.textContent = (state.progress.wrong || []).length; const mins = Math.round(state.progress.earnedMin || 0); DOM.clockMins.textContent = `${mins}m`; const pct = Math.min(100, Math.round((mins / PROGRESS_TARGET_MIN) * 100)); DOM.progressFill.style.width = pct + '%'; DOM.targetMins.textContent = PROGRESS_TARGET_MIN; // egg fill height: map pct to rect height (svg coordinate: 60 total, y origin top). set rect y and height to reveal from bottom
+ const svgH = 60; const fillH = Math.round((pct/100) * svgH); const y = svgH - fillH; if(DOM.eggFill){ DOM.eggFill.setAttribute('y', String(y)); DOM.eggFill.setAttribute('height', String(fillH)); } saveState(); }
+function animateClock(){ // tilt dial and pulse egg 
+  if(DOM.clockDial){ DOM.clockDial.classList.add('tilt'); setTimeout(()=>DOM.clockDial.classList.remove('tilt'), 820); } }
+DOM.btnExport.addEventListener('click', ()=>{ const blob = new Blob([JSON.stringify(state,null,2)], {type:'application/json'}); const url = URL.createObjectURL(blob); const a=document.createElement('a'); a.href=url; a.download='spellmoji-state.json'; a.click(); URL.revokeObjectURL(url); });
+DOM.btnImport.addEventListener('click', ()=>{ const inp=document.createElement('input'); inp.type='file'; inp.accept='application/json'; inp.onchange = ()=> { const f=inp.files[0]; if(!f) return; const r=new FileReader(); r.onload=()=>{ try{ const data=JSON.parse(r.result); state = data; saveState(); if(state.entries && state.entries.length){ DOM.sessionCard.style.display='block'; renderCurrentChoices(); updateCounts(); } showToast('Imported ✓'); }catch(e){ alert('Import failed'); } }; r.readAsText(f); }; inp.click(); });
+DOM.btnSay.addEventListener('click', ()=>{ const idx = state.progress.order[state.progress.pos]; if(idx===undefined) return; speak(state.entries[idx].word, DOM.voiceLang.value); }); DOM.btnHint.addEventListener('click', ()=>{ const idx = state.progress.order[state.progress.pos]; if(idx===undefined) return; const e = state.entries[idx]; if(DOM.spellStep.style.display !== 'none'){ const next = e.segments[e.currentSegmentIndex] || ''; if(next) speak(next, DOM.voiceLang.value); } else { speak(e.word, DOM.voiceLang.value); } });
+DOM.btnRestart.addEventListener('click', ()=>{ if(!state.progress.wrong.length){ showToast('No missed words — great!'); return; } state.progress.order = state.progress.wrong.slice(); state.progress.pos = 0; state.progress.wrong = []; state.progress.review = true; saveState(); DOM.endStep.style.display = 'none'; renderCurrentChoices(); });
+DOM.btnFinish.addEventListener('click', ()=>{ DOM.sessionCard.style.display = 'none'; showToast('Session finished — well done!'); });
+// Practice-to-master button: practice entries that are not yet mastered and have been seen at least once (or all not mastered if none seen)
+DOM.btnPracticeMastery.addEventListener('click', ()=>{ const candidates = state.entries.map((e,i)=>({e,i})).filter(x=>!x.e.stats.mastered && (x.e.repeatCorrect>0 || state.entries.filter(y=>!y.stats.mastered).length===state.entries.length)); if(!candidates.length){ showToast('No words ready for mastery practice yet'); return; } state.progress.order = candidates.map(c=>c.i); state.progress.pos = 0; state.progress.wrong = []; state.progress.review = true; saveState(); DOM.endStep.style.display = 'none'; renderCurrentChoices(); showToast('Practice-to-master started'); });
+DOM.btnBuild.addEventListener('click', buildList);
+function boot(){ loadState(); if(state.entries && state.entries.length){ DOM.sessionCard.style.display='block'; DOM.totalCount.textContent = state.entries.length; renderCurrentChoices(); } updateCounts(); }
+boot();
 </script>
 </body>
 </html>
